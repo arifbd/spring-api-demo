@@ -1,6 +1,7 @@
 package com.ennoblesoft.demo.controller;
 
 import com.ennoblesoft.demo.entity.Student;
+import com.ennoblesoft.demo.exception.CustomException;
 import com.ennoblesoft.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,12 @@ public class StudentController {
     StudentService studentService;
 
     @GetMapping("/student")
-    public List<Student> get(@RequestParam("name") String name) {
-        return studentService.get(name);
+    public List<Student> get(@RequestParam("name") String name) throws CustomException {
+        List<Student> studentList = studentService.get(name);
+        if (studentList.isEmpty())
+            throw new CustomException("No Student Found");
+        else
+            return studentList;
     }
 
     @PostMapping("/student")
